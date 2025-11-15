@@ -1,0 +1,29 @@
+{
+  "name": "betechified-note-taking-api",
+  "version": "1.0.0",
+  "description": "note taking api",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Blessingkeyz/BeTechified-Note-taking-API.git"
+  },
+  "keywords": [
+    "note",
+    "taking"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Blessingkeyz/BeTechified-Note-taking-API/issues"
+  },
+  "homepage": "https://github.com/Blessingkeyz/BeTechified-Note-taking-API#readme",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "nodemon": "^3.1.11"
+  }
+}
