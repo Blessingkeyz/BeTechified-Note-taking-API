@@ -18,8 +18,8 @@ Please add your name below:
 - Umukoro Blessing
 - Selorm Tetteh-Abotsi
 - Oyelabi Oluwatimileyin
-- Avindigh Imoiter
--
--
+- Ibilola Abiola
+- Usman Abdullahi Ibrahim
+-Imoiter Avindigh
 
 - ***
