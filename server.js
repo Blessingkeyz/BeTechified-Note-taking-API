@@ -1,17 +1,14 @@
-require("dotenv").config();
+const express = require('express');
+const cors = require('cors');
+const noteRoutes = require('./routes/noteRoutes');
 
-const express = require("express");
-const path = require("path");
 const app = express();
+const PORT = process.env.PORT || 3000;
 
-const port = process.env.PORT;
-
+app.use(cors());
 app.use(express.json());
+app.use('/api/notes', noteRoutes);
 
-app.get("/", (req, res) => {
-  res.send("Note Taking API by Group 4");
-});
-
-app.listen(port, () => {
-  console.log(`Week 2 App listening on port ${port}`);
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
