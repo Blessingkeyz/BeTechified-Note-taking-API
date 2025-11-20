@@ -1,11 +1,11 @@
 {
   "name": "betechified-note-taking-api",
   "version": "1.0.0",
-  "description": "note taking api",
+  "description": "note taking api for group 4",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon server.js"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "repository": {
     "type": "git",
