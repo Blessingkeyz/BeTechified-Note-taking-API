@@ -3,11 +3,13 @@ const cors = require('cors');
 const noteRoutes = require('./routes/noteRoutes');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+
 
 app.use(cors());
 app.use(express.json());
-app.use('/api/notes', noteRoutes)
+
+app.use('/api/notes', noteRoutes);
+
 
 require("./routes/notes")(app);
 
@@ -21,6 +23,8 @@ require("./routes/auth")(app);
 // Load Notes Routes
 require("./routes/notes")(app);
 
-app.listen(port, () => {
-  console.log(`Week 2 App listening on port ${port}`);
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
