@@ -1,28 +1,53 @@
- //updatedAt is added
-
 const { readDB, writeDB } = require("../../helpers/jsonDB");
 
-// PUT /notes/:id
-module.exports = (req, res) => {
-    const db = readDB();
-    const { id } = req.params;
-    const { title, content } = req.body;
+function parseCookies(cookieHeader) {
+  const cookies = {};
+  if (!cookieHeader) return cookies;
 
-    const idx = db.notes.findIndex(n => String(n.id) === String(id));
-    if (idx === -1) {
-        return res.status(404).json({ error: "Note not found" });
+  cookieHeader.split(";").forEach((cookie) => {
+    const [name, value] = cookie.trim().split("=");
+    cookies[name] = decodeURIComponent(value);
+  });
+
+  return cookies;
+}
+
+module.exports = function (app) {
+  app.put("/notes/:id", (req, res) => {
+    const { title, content } = req.body;
+    const noteId = Number(req.params.id);
+
+    if (!title && !content) {
+      return res.status(400).json({ error: "Nothing to update" });
     }
 
-    const note = db.notes[idx];
-    const updated = {
-        ...note,
-        title: title ?? note.title,
-        content: content ?? note.content,
-        updatedAt: new Date().toISOString()
-    };
+    const cookies = parseCookies(req.headers.cookie);
+    const userId = cookies.userId;
 
-    db.notes[idx] = updated;
-    writeDB(db);
+    if (!userId) {
+      return res.status(401).json({ error: "Not authenticated" });
+    }
 
-    return res.json(updated);
+    const notes = readDB("notes.json") || [];
+    const noteIndex = notes.findIndex(
+      (n) => n.id === noteId && n.userId == userId
+    );
+
+    if (noteIndex === -1) {
+      return res
+        .status(404)
+        .json({ error: "Note not found or not owned by user" });
+    }
+
+    // Update only provided fields
+    if (title) notes[noteIndex].title = title;
+    if (content) notes[noteIndex].content = content;
+
+    writeDB("notes.json", notes);
+
+    return res.json({
+      message: "Note updated successfully",
+      note: notes[noteIndex],
+    });
+  });
 };
