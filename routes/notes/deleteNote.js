@@ -1,31 +1,47 @@
 const { readDB, writeDB } = require("../../helpers/jsonDB");
 
+function parseCookies(cookieHeader) {
+  const cookies = {};
+  if (!cookieHeader) return cookies;
+
+  cookieHeader.split(";").forEach((cookie) => {
+    const [name, value] = cookie.trim().split("=");
+    cookies[name] = decodeURIComponent(value);
+  });
+
+  return cookies;
+}
+
 module.exports = function (app) {
-    app.delete("/notes/:id", (req, res) => {
-        const noteId = req.params.id;
+  app.delete("/notes/:id", (req, res) => {
+    const noteId = Number(req.params.id);
 
-        // Get all notes
-        const notesDB = readDB("notes");
+    const cookies = parseCookies(req.headers.cookie);
+    const userId = cookies.userId;
 
-        // Find note
-        const noteIndex = notesDB.findIndex(note => String(note.id) === String(noteId));
+    if (!userId) {
+      return res.status(401).json({ error: "Not authenticated" });
+    }
 
-        if (noteIndex === -1) {
-            return res.status(404).json({
-                success: false,
-                message: "Note not found"
-            });
-        }
+    const notes = readDB("notes.json") || [];
+    const noteIndex = notes.findIndex(
+      (n) => n.id === noteId && n.userId == userId
+    );
 
-        // Remove the note
-        notesDB.splice(noteIndex, 1);
+    if (noteIndex === -1) {
+      return res
+        .status(404)
+        .json({ error: "Note not found or not owned by user" });
+    }
 
-        // Save back to DB
-        writeDB("notes", notesDB);
+    // Remove the note
+    const deletedNote = notes.splice(noteIndex, 1);
 
-        return res.json({
-            success: true,
-            message: "Note deleted successfully"
-        });
+    writeDB("notes.json", notes);
+
+    return res.json({
+      message: "Note deleted successfully",
+      deleted: deletedNote[0],
     });
+  });
 };

@@ -30,12 +30,7 @@ module.exports = function (app) {
     if (!/[0-9]/.test(password)) {
       errors.push("Password must contain at least one number");
     }
-    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-      errors.push("Password must contain at least one special character (!@#$%^&* etc.)");
-    }
-    if (/password/i.test(password)) {
-      errors.push("Password cannot contain the word 'password'");
-    }
+
     if (/^(.)\1+$/.test(password)) {
       errors.push("Password cannot be made of repeated characters");
     }
@@ -58,7 +53,7 @@ module.exports = function (app) {
       id: Date.now(),
       name,
       email,
-      password // stored as plain text for simplicity
+      password,
     };
 
     users.push(newUser);
@@ -66,6 +61,8 @@ module.exports = function (app) {
     // Save back to JSON file
     writeDB("users.json", users);
 
-    res.status(201).json({ msg: ["User registered successfully"], user: newUser });
+    res
+      .status(201)
+      .json({ msg: ["User registered successfully"], user: newUser });
   });
 };
