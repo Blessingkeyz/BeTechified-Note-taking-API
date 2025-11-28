@@ -2,4 +2,5 @@ module.exports = function (app) {
     require("./register")(app);
   //   require("./login")(app);
   //   require("./forgotPassword")(app);
+    require("./deleteNote")(app);
 };
